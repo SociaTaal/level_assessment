@@ -1,0 +1,190 @@
+<!--
+  Sociataal Quick Quiz
+  • Logs submissions to Google Sheets only
+  • 20 MCQs + Name & Email fields
+  • Styled with Poppins & Nunito Sans
+  • Replace SCRIPT_URL placeholder
+  • Replace question texts and options as needed
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sociataal Quick Quiz</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-page: #F2F6F3;
+      --bg-card: #E6F3E9;
+      --text-dark: #1D1F22;
+      --text-body: #2B2D31;
+      --border: #C8D6CF;
+      --brand: #F9A826;
+      --success: #27AE60;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Nunito Sans', sans-serif;
+      background: var(--bg-page);
+      display: flex;
+      justify-content: center;
+      padding: 24px;
+    }
+    .quiz-container {
+      background: var(--bg-card);
+      max-width: 640px;
+      width: 100%;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    h1 {
+      font-family: 'Poppins', sans-serif;
+      color: var(--text-dark);
+      font-size: 2rem;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .question { margin-bottom: 20px; }
+    .question p {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      color: var(--text-body);
+      margin-bottom: 8px;
+    }
+    label { display: block; color: var(--text-body); margin: 8px 0; cursor: pointer; }
+    input[type="radio"] { margin-right: 8px; }
+    .field { margin-top: 14px; }
+    .field label { font-weight: 600; display: block; }
+    .text-input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-top: 6px;
+      font-family: inherit;
+      font-size: 16px;
+    }
+    .btn {
+      width: 100%;
+      border: none;
+      border-radius: 10px;
+      background: var(--brand);
+      padding: 12px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      color: var(--text-dark);
+      cursor: pointer;
+      margin-top: 18px;
+      font-size: 1rem;
+    }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .message { margin-top: 12px; text-align: center; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Quick Quiz</h1>
+    <form id="quizForm">
+      <!-- Original 4 QUESTIONS -->
+      <div class="question">
+        <p>1. What is the capital of the Netherlands?</p>
+        <label><input type="radio" name="q1" value="Amsterdam" required>Amsterdam</label>
+        <label><input type="radio" name="q1" value="Rotterdam">Rotterdam</label>
+        <label><input type="radio" name="q1" value="The Hague">The Hague</label>
+        <label><input type="radio" name="q1" value="Utrecht">Utrecht</label>
+      </div>
+      <div class="question">
+        <p>2. Which color is in the Dutch flag?</p>
+        <label><input type="radio" name="q2" value="Red" required>Red</label>
+        <label><input type="radio" name="q2" value="Green">Green</label>
+        <label><input type="radio" name="q2" value="Black">Black</label>
+        <label><input type="radio" name="q2" value="Yellow">Yellow</label>
+      </div>
+      <div class="question">
+        <p>3. “Gezellig” roughly means:</p>
+        <label><input type="radio" name="q3" value="Cozy" required>Cozy</label>
+        <label><input type="radio" name="q3" value="Sad">Sad</label>
+        <label><input type="radio" name="q3" value="Fast">Fast</label>
+        <label><input type="radio" name="q3" value="Bitter">Bitter</label>
+      </div>
+      <div class="question">
+        <p>4. Which flower is iconic in the Netherlands?</p>
+        <label><input type="radio" name="q4" value="Tulip" required>Tulip</label>
+        <label><input type="radio" name="q4" value="Rose">Rose</label>
+        <label><input type="radio" name="q4" value="Lily">Lily</label>
+        <label><input type="radio" name="q4" value="Sunflower">Sunflower</label>
+      </div>
+      <!-- ADDITIONAL QUESTIONS TEMPLATE -->
+      <!-- Copy this block for questions 5 through 20, updating the number and name attribute each time -->
+      <div class="question">
+        <p>5. [Your question 5 here]</p>
+        <label><input type="radio" name="q5" value="Option 1" required>Option 1</label>
+        <label><input type="radio" name="q5" value="Option 2">Option 2</label>
+        <label><input type="radio" name="q5" value="Option 3">Option 3</label>
+        <label><input type="radio" name="q5" value="Option 4">Option 4</label>
+      </div>
+      <!--
+      Continue duplicating the above <div class="question"> block,
+      changing every instance of '5' to the question number (6, 7, …, 20)
+      and updating the question text and option values accordingly.
+      -->
+      <!-- Name & Email -->
+      <div class="field">
+        <label for="name">Name</label>
+        <input id="name" class="text-input" name="name" type="text" placeholder="Your name" required>
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" class="text-input" name="email" type="email" placeholder="you@example.com" required>
+      </div>
+
+      <button type="submit" class="btn">Submit</button>
+      <div id="message" class="message"></div>
+    </form>
+  </div>
+
+  <script>
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzli3oCJzO3t5OrQVpoce_8UkPm_5gvDsWoclc53SAe_Bxk4fikFlYfM0YgcsVDaBSdiQ/exec';
+    const form = document.getElementById('quizForm');
+    const btn = form.querySelector('.btn');
+    const msg = document.getElementById('message');
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      btn.disabled = true;
+      msg.textContent = '';
+      try {
+        const res = await fetch(SCRIPT_URL, { method: 'POST', body: new FormData(form) });
+        const json = await res.json().catch(() => ({}));
+        if (res.ok && json.ok) {
+          msg.style.color = 'var(--success)';
+          msg.textContent = 'Thanks! Your responses have been recorded.';
+          form.reset();
+        } else {
+          throw new Error(json.error || 'Submission failed');
+        }
+      } catch (err) {
+        msg.style.color = '#B00020';
+        msg.textContent = 'Oops! Something went wrong.';
+        console.error(err);
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
+
+<!--
+  Google Sheet Setup:
+  • Sheet name: Responses
+  • Header row columns in order:
+    Timestamp | Name | Email | Q1 | Q2 | Q3 | Q4 | Q5 | Q6 | Q7 | Q8 | Q9 | Q10 | Q11 | Q12 | Q13 | Q14 | Q15 | Q16 | Q17 | Q18 | Q19 | Q20
+-->
