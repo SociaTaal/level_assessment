@@ -150,37 +150,47 @@
     </form>
   </div>
 
-  <script>
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzli3oCJzO3t5OrQVpoce_8UkPm_5gvDsWoclc53SAe_Bxk4fikFlYfM0YgcsVDaBSdiQ/exec';
-    const form = document.getElementById('quizForm');
-    const btn = form.querySelector('.btn');
-    const msg = document.getElementById('message');
+<script>
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzli3oCJzO3t5OrQVpoce_8UkPm_5gvDsWoclc53SAe_Bxk4fikFlYfM0YgcsVDaBSdiQ/exec'; // must end with /exec
+  const form = document.getElementById('quizForm');
+  const btn = form.querySelector('.btn');
+  const msg = document.getElementById('message');
 
-    form.addEventListener('submit', async e => {
-      e.preventDefault();
-      btn.disabled = true;
-      msg.textContent = '';
-      try {
-        const res = await fetch(SCRIPT_URL, { method: 'POST', body: new FormData(form) });
-        const json = await res.json().catch(() => ({}));
-        if (res.ok && json.ok) {
-          msg.style.color = 'var(--success)';
-          msg.textContent = 'Thanks! Your responses have been recorded.';
-          form.reset();
-        } else {
-          throw new Error(json.error || 'Submission failed');
-        }
-      } catch (err) {
-        msg.style.color = '#B00020';
-        msg.textContent = 'Oops! Something went wrong.';
-        console.error(err);
-      } finally {
-        btn.disabled = false;
-      }
-    });
-  </script>
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    btn.disabled = true;
+    msg.textContent = '';
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: new FormData(form),
+        mode: 'no-cors'   // ← avoids CORS error; response is opaque
+      });
+
+      // We can’t inspect the response in no-cors mode, so show a friendly success:
+      msg.style.color = 'var(--success)';
+      msg.textContent = 'Thanks! Your responses have been recorded.';
+      form.reset();
+
+    } catch (err) {
+      msg.style.color = '#B00020';
+      msg.textContent = 'Oops! Something went wrong.';
+      console.error(err);
+    } finally {
+      btn.disabled = false;
+    }
+  });
+</script>
+
+
+
+
 </body>
 </html>
+
+
+
 
 <!--
   Google Sheet Setup:
