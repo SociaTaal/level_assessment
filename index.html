@@ -1,21 +1,12 @@
-<!--
-  Sociataal Quick Quiz
-  • Logs submissions to Google Sheets only
-  • 20 MCQs + Name & Email fields
-  • Styled with Poppins & Nunito Sans
-  • Replace SCRIPT_URL placeholder
-  • Replace question texts and options as needed
--->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sociataal Quick Quiz</title>
 
   <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
 
   <style>
     :root {
@@ -24,8 +15,11 @@
       --text-dark: #1D1F22;
       --text-body: #2B2D31;
       --border: #C8D6CF;
-      --brand: #F9A826;
+      --brand: #F9A826; /* orange */
       --success: #27AE60;
+      --danger: #B00020;
+      --radius: 12px;
+      --slide-ms: 320ms;
     }
     * { box-sizing: border-box; }
     body {
@@ -36,159 +30,229 @@
       justify-content: center;
       padding: 24px;
     }
-    .quiz-container {
+    .quiz {
       background: var(--bg-card);
-      max-width: 640px;
       width: 100%;
-      padding: 24px;
-      border-radius: 12px;
+      max-width: 680px;
+      border-radius: var(--radius);
       box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      overflow: hidden;
     }
-    h1 {
-      font-family: 'Poppins', sans-serif;
-      color: var(--text-dark);
-      font-size: 2rem;
-      margin-bottom: 16px;
-      text-align: center;
-    }
-    .question { margin-bottom: 20px; }
-    .question p {
-      font-family: 'Poppins', sans-serif;
-      font-weight: 600;
-      color: var(--text-body);
-      margin-bottom: 8px;
-    }
-    label { display: block; color: var(--text-body); margin: 8px 0; cursor: pointer; }
-    input[type="radio"] { margin-right: 8px; }
-    .field { margin-top: 14px; }
+    .quiz-header { padding: 20px 24px 0; }
+    h1 { font-family: 'Poppins', sans-serif; color: var(--text-dark); font-size: 2rem; margin: 0 0 8px; text-align: center; }
+
+    /* Card viewport */
+    .cards { position: relative; height: auto; min-height: 360px; overflow: hidden; }
+    .card { position: absolute; inset: 0; padding: 24px; background: transparent; transform: translateX(100%); opacity: 0; transition: transform var(--slide-ms) ease, opacity var(--slide-ms) ease; }
+    .card.active { transform: translateX(0); opacity: 1; }
+    .card.to-left { transform: translateX(-100%); }
+
+    .q-title { font-family: 'Poppins', sans-serif; font-weight: 600; color: var(--text-body); margin: 0 0 10px; }
+    .option { display: block; margin: 10px 0; color: var(--text-body); cursor: pointer; }
+    .option input { margin-right: 8px; }
+
+    .field { margin: 14px 0; }
     .field label { font-weight: 600; display: block; }
-    .text-input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      margin-top: 6px;
-      font-family: inherit;
-      font-size: 16px;
-    }
-    .btn {
-      width: 100%;
-      border: none;
-      border-radius: 10px;
-      background: var(--brand);
-      padding: 12px;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 700;
-      color: var(--text-dark);
-      cursor: pointer;
-      margin-top: 18px;
-      font-size: 1rem;
-    }
-    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
-    .message { margin-top: 12px; text-align: center; font-weight: 600; }
+    .text-input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; margin-top: 6px; font-size: 16px; font-family: inherit; background: #fff; }
+
+    /* Footer controls */
+    .controls { display: flex; gap: 10px; padding: 16px 24px 20px; }
+    .btn { flex: 1; border: 0; border-radius: 10px; background: var(--brand); color: var(--text-dark); font-weight: 700; font-family: 'Poppins', sans-serif; padding: 12px 16px; cursor: pointer; }
+    .btn[disabled] { opacity: .6; cursor: not-allowed; }
+    .btn.secondary { background: #fff3da; }
+
+    /* Progress bar */
+    .progress-wrap { width: 100%; height: 8px; background: #ffe3b3; border-radius: 999px; overflow: hidden; margin: 0; }
+    .progress-bar { height: 100%; width: 0%; background: var(--brand); transition: width 250ms ease; }
+
+    .message { padding: 0 24px 20px; text-align: center; font-weight: 600; }
   </style>
 </head>
 <body>
-  <div class="quiz-container">
-    <h1>Quick Quiz</h1>
+  <div class="quiz">
+    <div class="quiz-header">
+      <h1>Quick Quiz</h1>
+    </div>
+
     <form id="quizForm">
-      <!-- Original 4 QUESTIONS -->
-      <div class="question">
-        <p>1. What is the capital of the Netherlands?</p>
-        <label><input type="radio" name="q1" value="Amsterdam" required>Amsterdam</label>
-        <label><input type="radio" name="q1" value="Rotterdam">Rotterdam</label>
-        <label><input type="radio" name="q1" value="The Hague">The Hague</label>
-        <label><input type="radio" name="q1" value="Utrecht">Utrecht</label>
-      </div>
-      <div class="question">
-        <p>2. Which color is in the Dutch flag?</p>
-        <label><input type="radio" name="q2" value="Red" required>Red</label>
-        <label><input type="radio" name="q2" value="Green">Green</label>
-        <label><input type="radio" name="q2" value="Black">Black</label>
-        <label><input type="radio" name="q2" value="Yellow">Yellow</label>
-      </div>
-      <div class="question">
-        <p>3. “Gezellig” roughly means:</p>
-        <label><input type="radio" name="q3" value="Cozy" required>Cozy</label>
-        <label><input type="radio" name="q3" value="Sad">Sad</label>
-        <label><input type="radio" name="q3" value="Fast">Fast</label>
-        <label><input type="radio" name="q3" value="Bitter">Bitter</label>
-      </div>
-      <div class="question">
-        <p>4. Which flower is iconic in the Netherlands?</p>
-        <label><input type="radio" name="q4" value="Tulip" required>Tulip</label>
-        <label><input type="radio" name="q4" value="Rose">Rose</label>
-        <label><input type="radio" name="q4" value="Lily">Lily</label>
-        <label><input type="radio" name="q4" value="Sunflower">Sunflower</label>
-      </div>
-      <!-- ADDITIONAL QUESTIONS TEMPLATE -->
-      <!-- Copy this block for questions 5 through 20, updating the number and name attribute each time -->
-      <div class="question">
-        <p>5. [Your question 5 here]</p>
-        <label><input type="radio" name="q5" value="Option 1" required>Option 1</label>
-        <label><input type="radio" name="q5" value="Option 2">Option 2</label>
-        <label><input type="radio" name="q5" value="Option 3">Option 3</label>
-        <label><input type="radio" name="q5" value="Option 4">Option 4</label>
-      </div>
-      <!--
-      Continue duplicating the above <div class="question"> block,
-      changing every instance of '5' to the question number (6, 7, …, 20)
-      and updating the question text and option values accordingly.
-      -->
-      <!-- Name & Email -->
-      <div class="field">
-        <label for="name">Name</label>
-        <input id="name" class="text-input" name="name" type="text" placeholder="Your name" required>
-      </div>
-      <div class="field">
-        <label for="email">Email</label>
-        <input id="email" class="text-input" name="email" type="email" placeholder="you@example.com" required>
+      <!-- Card viewport -->
+      <div class="cards" id="cards">
+        <!-- Q1 -->
+        <section class="card active" data-type="question">
+          <p class="q-title">1. What is the capital of the Netherlands?</p>
+          <label class="option"><input type="radio" name="q1" value="Amsterdam" required> Amsterdam</label>
+          <label class="option"><input type="radio" name="q1" value="Rotterdam"> Rotterdam</label>
+          <label class="option"><input type="radio" name="q1" value="The Hague"> The Hague</label>
+          <label class="option"><input type="radio" name="q1" value="Utrecht"> Utrecht</label>
+        </section>
+        <!-- Q2 -->
+        <section class="card" data-type="question">
+          <p class="q-title">2. Which color is in the Dutch flag?</p>
+          <label class="option"><input type="radio" name="q2" value="Red" required> Red</label>
+          <label class="option"><input type="radio" name="q2" value="Green"> Green</label>
+          <label class="option"><input type="radio" name="q2" value="Black"> Black</label>
+          <label class="option"><input type="radio" name="q2" value="Yellow"> Yellow</label>
+        </section>
+        <!-- Q3 -->
+        <section class="card" data-type="question">
+          <p class="q-title">3. “Gezellig” roughly means:</p>
+          <label class="option"><input type="radio" name="q3" value="Cozy" required> Cozy</label>
+          <label class="option"><input type="radio" name="q3" value="Sad"> Sad</label>
+          <label class="option"><input type="radio" name="q3" value="Fast"> Fast</label>
+          <label class="option"><input type="radio" name="q3" value="Bitter"> Bitter</label>
+        </section>
+        <!-- Q4 -->
+        <section class="card" data-type="question">
+          <p class="q-title">4. Which flower is iconic in the Netherlands?</p>
+          <label class="option"><input type="radio" name="q4" value="Tulip" required> Tulip</label>
+          <label class="option"><input type="radio" name="q4" value="Rose"> Rose</label>
+          <label class="option"><input type="radio" name="q4" value="Lily"> Lily</label>
+          <label class="option"><input type="radio" name="q4" value="Sunflower"> Sunflower</label>
+        </section>
+        <!-- Q5 template (duplicate and edit up to Q20) -->
+        <section class="card" data-type="question">
+          <p class="q-title">5. [Your question 5 here]</p>
+          <label class="option"><input type="radio" name="q5" value="Option 1" required> Option 1</label>
+          <label class="option"><input type="radio" name="q5" value="Option 2"> Option 2</label>
+          <label class="option"><input type="radio" name="q5" value="Option 3"> Option 3</label>
+          <label class="option"><input type="radio" name="q5" value="Option 4"> Option 4</label>
+        </section>
+        <section class="card" data-type="question">
+          <p class="q-title">5. [Your question 6 here]</p>
+          <label class="option"><input type="radio" name="q6" value="Option 1" required> Option 1</label>
+          <label class="option"><input type="radio" name="q6" value="Option 2"> Option 2</label>
+          <label class="option"><input type="radio" name="q6" value="Option 3"> Option 3</label>
+          <label class="option"><input type="radio" name="q6" value="Option 4"> Option 4</label>
+        </section>
+        <!-- Duplicate the section above for q6 … q20, then keep the final card below -->
+
+        <!-- Final card: Name & Email -->
+        <section class="card" data-type="info">
+          <p class="q-title">Almost done! Your details:</p>
+          <div class="field">
+            <label for="name">Name</label>
+            <input id="name" class="text-input" name="name" type="text" placeholder="Your name" required />
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" class="text-input" name="email" type="email" placeholder="you@example.com" required />
+          </div>
+        </section>
       </div>
 
-      <button type="submit" class="btn">Submit</button>
+      <!-- Footer controls -->
+      <div class="controls">
+        <button type="button" class="btn secondary" id="backBtn">Back</button>
+        <button type="button" class="btn" id="nextBtn">Next</button>
+        <button type="submit" class="btn" id="submitBtn" style="display:none">Submit</button>
+      </div>
+
+      <!-- Progress -->
+      <div class="progress-wrap">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+
       <div id="message" class="message"></div>
     </form>
   </div>
 
-
   <script>
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzli3oCJzO3t5OrQVpoce_8UkPm_5gvDsWoclc53SAe_Bxk4fikFlYfM0YgcsVDaBSdiQ/exec';
-  const form = document.getElementById('quizForm');
-  const btn = form.querySelector('.btn');
-  const msg = document.getElementById('message');
+    // REQUIRED: set your deployed Apps Script URL (must end with /exec)
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzli3oCJzO3t5OrQVpoce_8UkPm_5gvDsWoclc53SAe_Bxk4fikFlYfM0YgcsVDaBSdiQ/exec';
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    btn.disabled = true;
-    msg.textContent = '';
-    try {
-      await fetch(SCRIPT_URL, {
-        method: 'POST',
-        body: new FormData(form),
-        mode: 'no-cors' // avoid CORS preflight/reads
-      });
+    const cards = Array.from(document.querySelectorAll('.card'));
+    const questionCards = cards.filter(c => c.dataset.type === 'question');
+    const backBtn = document.getElementById('backBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const progressBar = document.getElementById('progressBar');
+    const msg = document.getElementById('message');
+    const form = document.getElementById('quizForm');
 
-      // Can't read response in no-cors mode, but the Sheet write will succeed.
-      msg.style.color = 'var(--success)';
-      msg.textContent = 'Thanks! Your responses have been recorded.';
-      form.reset();
-    } catch (err) {
-      msg.style.color = '#B00020';
-      msg.textContent = 'Oops! Something went wrong.';
-      console.error(err);
-    } finally {
-      btn.disabled = false;
+    let index = 0; // active card index
+
+    function updateProgress() {
+      // Progress based only on question cards
+      const answeredIdx = Math.min(index, questionCards.length); // don't exceed
+      const pct = Math.round((answeredIdx / questionCards.length) * 100);
+      progressBar.style.width = pct + '%';
     }
-  });
-</script>
 
-  
+    function showCard(newIndex, direction = 1) {
+      if (newIndex < 0 || newIndex >= cards.length) return;
+      const current = cards[index];
+      const next = cards[newIndex];
+
+      // prepare directions
+      current.classList.remove('active');
+      if (direction > 0) current.classList.add('to-left'); else current.style.transform = 'translateX(100%)';
+
+      // reset all positions
+      cards.forEach(c => { if (c !== next) { if (!c.classList.contains('to-left')) c.style.transform = 'translateX(100%)'; c.style.opacity = 0; } });
+
+      // activate next
+      next.classList.remove('to-left');
+      next.classList.add('active');
+      next.style.transform = 'translateX(0)';
+      next.style.opacity = 1;
+
+      index = newIndex;
+      updateControls();
+      updateProgress();
+    }
+
+    function updateControls() {
+      backBtn.style.display = index === 0 ? 'none' : 'inline-block';
+      // If on last card, show Submit; else show Next
+      const onLast = index === cards.length - 1;
+      nextBtn.style.display = onLast ? 'none' : 'inline-block';
+      submitBtn.style.display = onLast ? 'inline-block' : 'none';
+    }
+
+    function validateCurrent() {
+      const current = cards[index];
+      if (current.dataset.type !== 'question') return true; // only enforce on question cards
+      const inputs = current.querySelectorAll('input[type="radio"][name^="q"]');
+      // at least one checked
+      return Array.from(inputs).some(i => i.checked);
+    }
+
+    backBtn.addEventListener('click', () => {
+      showCard(index - 1, -1);
+    });
+
+    nextBtn.addEventListener('click', () => {
+      msg.textContent = '';
+      if (!validateCurrent()) {
+        msg.style.color = 'var(--danger)';
+        msg.textContent = 'Please select an answer to continue.';
+        return;
+      }
+      showCard(index + 1, 1);
+    });
+
+    // Initial UI
+    updateControls();
+    updateProgress();
+
+    // Submit handler (no-cors to avoid browser CORS on static hosting)
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true; nextBtn.disabled = true; backBtn.disabled = true;
+      msg.textContent = '';
+      try {
+        await fetch(SCRIPT_URL, { method: 'POST', body: new FormData(form), mode: 'no-cors' });
+        msg.style.color = 'var(--success)';
+        msg.textContent = 'Thanks! Your responses have been recorded.';
+        form.reset();
+      } catch (err) {
+        msg.style.color = 'var(--danger)';
+        msg.textContent = 'Oops! Something went wrong.';
+        console.error(err);
+      } finally {
+        submitBtn.disabled = false; nextBtn.disabled = false; backBtn.disabled = false;
+      }
+    });
+  </script>
 </body>
 </html>
-
-<!--
-  Google Sheet Setup:
-  • Sheet name: Responses
-  • Header row columns in order:
-    Timestamp | Name | Email | Q1 | Q2 | Q3 | Q4 | Q5 | Q6 | Q7 | Q8 | Q9 | Q10 | Q11 | Q12 | Q13 | Q14 | Q15 | Q16 | Q17 | Q18 | Q19 | Q20
--->
