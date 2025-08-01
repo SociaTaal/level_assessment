@@ -18,7 +18,7 @@
 
   <style>
     :root {
-      --bg-page: ##ffffff;
+      --bg-page: #ffffff;
       --bg-card: #ffffff; /* white background */
       --text-dark: #1D1F22;
       --text-body: #2B2D31;
@@ -39,16 +39,20 @@
       justify-content: center;
       padding: 10px;
     }
-    .quiz {
-      position: relative;
-      background: var(--bg-card);
-      border: 4px solid #64906d; /* added border */
-      width: 100%; max-width: 680px;
-      border-radius: var(--radius);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      display: flex; flex-direction: column;
-      overflow: hidden;
-    }
+.quiz {
+  position: relative;
+  background: var(--bg-card);
+  /* removed border */
+  width: 100%; 
+  max-width: 680px;
+  border-radius: var(--radius);
+  /* stronger shadow instead of border */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+  display: flex; 
+  flex-direction: column;
+  overflow: hidden;
+}
+
     .quiz-header { padding: 16px 24px 0; }
     h1 {
       font-family: 'Poppins', sans-serif;
@@ -59,7 +63,7 @@
 
     .cards {
       position: relative; flex: 1;
-      min-height: 260px; overflow: hidden;
+      min-height: 220px; overflow: hidden;
     }
     .card {
       position: absolute; inset: 0;
@@ -74,6 +78,7 @@
     .q-title {
       font-family: 'Poppins', sans-serif;
       font-weight: 600;
+      font-size: 18px;
       color: var(--text-body);
       margin: 0 0 6px;
     }
@@ -106,7 +111,7 @@
       z-index: 1; /* bar underneath the bike */
     }
     .progress-bar {
-      height: 100%; width: 0%; background: var(--brand);
+      height: 100%; width: 0%; background: var(--success);
       transition: width 250ms ease;
     }
     .bike {
@@ -141,52 +146,215 @@
 <body>
   <div class="quiz">
     <div class="quiz-header">
-      <h1>Test Your Dutch Level</h1>
     </div>
 
     <form id="quizForm" style="flex:1;display:flex;flex-direction:column;">
       <div class="cards" id="cards">
-        <!-- Q1 -->
-        <section class="card active" data-type="question">
-          <p class="q-title">1. What is the capital of the Netherlands?</p>
-          <label class="option"><input type="radio" name="q1" value="Amsterdam" required>Amsterdam</label>
-          <label class="option"><input type="radio" name="q1" value="Rotterdam">Rotterdam</label>
-          <label class="option"><input type="radio" name="q1" value="The Hague">The Hague</label>
-          <label class="option"><input type="radio" name="q1" value="Utrecht">Utrecht</label>
-        </section>
-        <!-- Q2 -->
-        <section class="card" data-type="question">
-          <p class="q-title">2. Which color is in the Dutch flag?</p>
-          <label class="option"><input type="radio" name="q2" value="Red" required>Red</label>
-          <label class="option"><input type="radio" name="q2" value="Green">Green</label>
-          <label class="option"><input type="radio" name="q2" value="Black">Black</label>
-          <label class="option"><input type="radio" name="q2" value="Yellow">Yellow</label>
-        </section>
-        <!-- Q3 -->
-        <section class="card" data-type="question">
-          <p class="q-title">3. “Gezellig” roughly means:</p>
-          <label class="option"><input type="radio" name="q3" value="Cozy" required>Cozy</label>
-          <label class="option"><input type="radio" name="q3" value="Sad">Sad</label>
-          <label class="option"><input type="radio" name="q3" value="Fast">Fast</label>
-          <label class="option"><input type="radio" name="q3" value="Bitter">Bitter</label>
-        </section>
-        <!-- Q4 -->
-        <section class="card" data-type="question">
-          <p class="q-title">4. Which flower is iconic in the Netherlands?</p>
-          <label class="option"><input type="radio" name="q4" value="Tulip" required>Tulip</label>
-          <label class="option"><input type="radio" name="q4" value="Rose">Rose</label>
-          <label class="option"><input type="radio" name="q4" value="Lily">Lily</label>
-          <label class="option"><input type="radio" name="q4" value="Sunflower">Sunflower</label>
-        </section>
-        <!-- Q5 Template -->
-        <section class="card" data-type="question">
-          <p class="q-title">5. [Your question 5 here]</p>
-          <label class="option"><input type="radio" name="q5" value="Option 1" required>Option 1</label>
-          <label class="option"><input type="radio" name="q5" value="Option 2">Option 2</label>
-          <label class="option"><input type="radio" name="q5" value="Option 3">Option 3</label>
-          <label class="option"><input type="radio" name="q5" value="Option 4">Option 4</label>
-        </section>
-        <!-- Duplicate the above section for Q6–Q20 -->
+<!-- Q1 -->
+<section class="card active" data-type="question">
+  <p class="q-title">1. Hoi, ik ___ Koen.</p>
+  <label class="option"><input type="radio" name="q1" value="heet" required>heet</label>
+  <label class="option"><input type="radio" name="q1" value="heten">heten</label>
+  <label class="option"><input type="radio" name="q1" value="hiet">hiet</label>
+  <label class="option"><input type="radio" name="q1" value="is">is</label>
+</section>
+
+<!-- Q2 -->
+<section class="card" data-type="question">
+  <p class="q-title">2. Mijn broer ___ al 5 jaar in Nederland.</p>
+  <label class="option"><input type="radio" name="q2" value="woon" required>woon</label>
+  <label class="option"><input type="radio" name="q2" value="woont">woont</label>
+  <label class="option"><input type="radio" name="q2" value="won">won</label>
+  <label class="option"><input type="radio" name="q2" value="gewoond">gewoond</label>
+</section>
+
+<!-- Q3 -->
+<section class="card" data-type="question">
+  <p class="q-title">3. Wie is de broer van je vader?</p>
+  <label class="option"><input type="radio" name="q3" value="mijn neef" required>mijn neef</label>
+  <label class="option"><input type="radio" name="q3" value="mijn oom">mijn oom</label>
+  <label class="option"><input type="radio" name="q3" value="mijn opa">mijn opa</label>
+  <label class="option"><input type="radio" name="q3" value="mijn tante">mijn tante</label>
+</section>
+
+<!-- Q4 -->
+<section class="card" data-type="question">
+  <p class="q-title">4. Kies de juiste woordvolgorde: Morgen ik ga naar de supermarkt.</p>
+  <label class="option"><input type="radio" name="q4" value="Morgen ga ik naar de supermarkt" required>Morgen ga ik naar de supermarkt</label>
+  <label class="option"><input type="radio" name="q4" value="Ik morgen ga naar de supermarkt">Ik morgen ga naar de supermarkt</label>
+  <label class="option"><input type="radio" name="q4" value="Morgen ik naar de supermarkt ga">Morgen ik naar de supermarkt ga</label>
+</section>
+
+<!-- Q5 -->
+<section class="card" data-type="question">
+  <p class="q-title">5. ___ ga je op vakantie?</p>
+  <label class="option"><input type="radio" name="q5" value="Wanneer" required>Wanneer</label>
+  <label class="option"><input type="radio" name="q5" value="Hoeveel">Hoeveel</label>
+  <label class="option"><input type="radio" name="q5" value="Wie">Wie</label>
+  <label class="option"><input type="radio" name="q5" value="Welke">Welke</label>
+</section>
+
+<!-- Q6 -->
+<section class="card" data-type="question">
+  <p class="q-title">6. Dit is mijn oom. – Ken je ___?</p>
+  <label class="option"><input type="radio" name="q6" value="haar" required>haar</label>
+  <label class="option"><input type="radio" name="q6" value="het">het</label>
+  <label class="option"><input type="radio" name="q6" value="hem">hem</label>
+  <label class="option"><input type="radio" name="q6" value="ze">ze</label>
+</section>
+
+<!-- Q7 -->
+<section class="card" data-type="question">
+  <p class="q-title">7. “Voor mij een cola, alsjeblieft.” Welke vraag past hierbij?</p>
+  <label class="option"><input type="radio" name="q7" value="Wat wil je drinken?" required>Wat wil je drinken?</label>
+  <label class="option"><input type="radio" name="q7" value="Kan je wat drinken?">Kan je wat drinken?</label>
+  <label class="option"><input type="radio" name="q7" value="Wat mogen jullie drinken?">Wat mogen jullie drinken?</label>
+  <label class="option"><input type="radio" name="q7" value="Hoeveel drinken heb je?">Hoeveel drinken heb je?</label>
+</section>
+
+<!-- Q8 -->
+<section class="card" data-type="question">
+  <p class="q-title">8. Het linkerhuis is ___ dan het rechterhuis.</p>
+  <label class="option"><input type="radio" name="q8" value="groot" required>groot</label>
+  <label class="option"><input type="radio" name="q8" value="groter">groter</label>
+  <label class="option"><input type="radio" name="q8" value="grootste">grootste</label>
+  <label class="option"><input type="radio" name="q8" value="grootst">grootst</label>
+</section>
+
+<!-- Q9 -->
+<section class="card" data-type="question">
+  <p class="q-title">9. Hoe laat is het? Het is ___ (7:45).</p>
+  <label class="option"><input type="radio" name="q9" value="Het is zeven uur vijfenveertig" required>Het is zeven uur vijfenveertig</label>
+  <label class="option"><input type="radio" name="q9" value="Het is kwart over acht">Het is kwart over acht</label>
+  <label class="option"><input type="radio" name="q9" value="Het is kwart over half acht">Het is kwart over half acht</label>
+  <label class="option"><input type="radio" name="q9" value="Het is kwart over half zeven">Het is kwart over half zeven</label>
+</section>
+
+<!-- Q10 -->
+<section class="card" data-type="question">
+  <p class="q-title">10. Welke zin is correct?</p>
+  <label class="option"><input type="radio" name="q10" value="Ik woon in een mooi huis." required>Ik woon in een mooi huis.</label>
+  <label class="option"><input type="radio" name="q10" value="Ik woon in een moie huis.">Ik woon in een moie huis.</label>
+  <label class="option"><input type="radio" name="q10" value="Ik woon in een mooie huis.">Ik woon in een mooie huis.</label>
+  <label class="option"><input type="radio" name="q10" value="Ik woon in een mooien huis.">Ik woon in een mooien huis.</label>
+</section>
+
+<!-- Q11 -->
+<section class="card" data-type="question">
+  <p class="q-title">11. Niet of geen? Welke zin is correct?</p>
+  <label class="option"><input type="radio" name="q11" value="Hij kan geen goed zwemmen." required>Hij kan geen goed zwemmen.</label>
+  <label class="option"><input type="radio" name="q11" value="Hij kan niet goed zwemmen.">Hij kan niet goed zwemmen.</label>
+  <label class="option"><input type="radio" name="q11" value="Hij kan niet zwemmen goed.">Hij kan niet zwemmen goed.</label>
+  <label class="option"><input type="radio" name="q11" value="Hij niet kan zwemmen.">Hij niet kan zwemmen.</label>
+</section>
+
+<!-- Q12 -->
+<section class="card" data-type="question">
+  <p class="q-title">12. Maak negatief: De broek is duur.</p>
+  <label class="option"><input type="radio" name="q12" value="De broek is geen duur." required>De broek is geen duur.</label>
+  <label class="option"><input type="radio" name="q12" value="De broek is niet duur.">De broek is niet duur.</label>
+  <label class="option"><input type="radio" name="q12" value="is">is</label>
+  <label class="option"><input type="radio" name="q12" value="De broek geen duur is.">De broek geen duur is.</label>
+</section>
+
+<!-- Q13 -->
+<section class="card" data-type="question">
+  <p class="q-title">13. Het bestek ___ in de keukenla.</p>
+  <label class="option"><input type="radio" name="q13" value="ligt" required>ligt</label>
+  <label class="option"><input type="radio" name="q13" value="staat">staat</label>
+  <label class="option"><input type="radio" name="q13" value="is">is</label>
+  <label class="option"><input type="radio" name="q13" value="zit">zit</label>
+</section>
+
+<!-- Q14 -->
+<section class="card" data-type="question">
+  <p class="q-title">14. Hoeveel t-shirts heb je?</p>
+  <label class="option"><input type="radio" name="q14" value="Ik heb twaalf." required>Ik heb twaalf.</label>
+  <label class="option"><input type="radio" name="q14" value="Ik heb twaalf er.">Ik heb twaalf er.</label>
+  <label class="option"><input type="radio" name="q14" value="Ik heb er twaalf.">Ik heb er twaalf.</label>
+  <label class="option"><input type="radio" name="q14" value="Er heb ik twaalf.">Er heb ik twaalf.</label>
+</section>
+
+<!-- Q15 -->
+<section class="card" data-type="question">
+  <p class="q-title">15. Is dit je eerste keer Koningsdag?</p>
+  <label class="option"><input type="radio" name="q15" value="Ja, ik vierde nog nooit Koningsdag!" required>Ja, ik vierde nog nooit Koningsdag!</label>
+  <label class="option"><input type="radio" name="q15" value="Ja, ik heb nog nooit een Koningsdag gevierd!">Ja, ik heb nog nooit een Koningsdag gevierd!</label>
+  <label class="option"><input type="radio" name="q15" value="Ja, ik nooit een Koningsdag.">Ja, ik nooit een Koningsdag.</label>
+  <label class="option"><input type="radio" name="q15" value="Ja, ik was nog geen Koningsdag.">Ja, ik was nog geen Koningsdag.</label>
+</section>
+
+<!-- Q16 -->
+<section class="card" data-type="question">
+  <p class="q-title">16. Wat heb je gisteren gedaan?</p>
+  <label class="option"><input type="radio" name="q16" value="Gisteren ik werkte" required>Gisteren ik werkte</label>
+  <label class="option"><input type="radio" name="q16" value="Gisteren heb ik werken.">Gisteren heb ik werken.</label>
+  <label class="option"><input type="radio" name="q16" value="Gisteren ben ik gewerkt.">Gisteren ben ik gewerkt.</label>
+  <label class="option"><input type="radio" name="q16" value="Gisteren heb ik gewerkt.">Gisteren heb ik gewerkt.</label>
+</section>
+
+<!-- Q17 -->
+<section class="card" data-type="question">
+  <p class="q-title">17. De kinderen ___ de woonkamer na het spelen. (opruimen)</p>
+  <label class="option"><input type="radio" name="q17" value="De kinderen opruimen de woonkamer na het spelen." required>De kinderen opruimen de woonkamer na het spelen.</label>
+  <label class="option"><input type="radio" name="q17" value="De kinderen ruimen op de woonkamer na het spelen.">De kinderen ruimen op de woonkamer na het spelen.</label>
+  <label class="option"><input type="radio" name="q17" value="De kinderen ruimen de woonkamer na het spelen op.">De kinderen ruimen de woonkamer na het spelen op.</label>
+  <label class="option"><input type="radio" name="q17" value="De kinderen op de woonkamer na het spelen ruimen.">De kinderen op de woonkamer na het spelen ruimen.</label>
+</section>
+
+<!-- Q18 -->
+<section class="card" data-type="question">
+  <p class="q-title">18. Kies de juiste conjunctie: Ik werk fulltime, ___ ik wil graag parttime gaan werken.</p>
+  <label class="option"><input type="radio" name="q18" value="omdat" required>omdat</label>
+  <label class="option"><input type="radio" name="q18" value="maar">maar</label>
+  <label class="option"><input type="radio" name="q18" value="terwijl">terwijl</label>
+  <label class="option"><input type="radio" name="q18" value="want">want</label>
+</section>
+
+<!-- Q19 -->
+<section class="card" data-type="question">
+  <p class="q-title">19. Sara vraagt: “Gaat het morgen regenen?” Wat vraagt Sara?</p>
+  <label class="option"><input type="radio" name="q19" value="Sara vraagt dat het morgen regent." required>Sara vraagt dat het morgen regent.</label>
+  <label class="option"><input type="radio" name="q19" value="Sara vraagt of het morgen gaat regenen.">Sara vraagt of het morgen gaat regenen.</label>
+  <label class="option"><input type="radio" name="q19" value="Sara vraagt wanneer het morgen regent.">Sara vraagt wanneer het morgen regent.</label>
+  <label class="option"><input type="radio" name="q19" value="Sara vraagt of het morgen regen.">Sara vraagt of het morgen regen.</label>
+</section>
+
+<!-- Q20 -->
+<section class="card" data-type="question">
+  <p class="q-title">20. Wat doe je graag in het weekend?</p>
+  <label class="option"><input type="radio" name="q20" value="Ik vind het leuk wandelen" required>Ik vind het leuk wandelen</label>
+  <label class="option"><input type="radio" name="q20" value="Ik vind om het leuk wandelen.">Ik vind om het leuk wandelen.</label>
+  <label class="option"><input type="radio" name="q20" value="Ik vind het leuk om te wandelen.">Ik vind het leuk om te wandelen.</label>
+  <label class="option"><input type="radio" name="q20" value="Ik vind om het leuk te wandelen.">Ik vind om het leuk te wandelen.</label>
+</section>
+
+<!-- Q21 -->
+<section class="card" data-type="question">
+  <p class="q-title">21. Je voelt dat je lees- en schrijfniveau hoger is dan je spreekniveau.</p>
+  <label class="option"><input type="radio" name="q21" value="True" required>True</label>
+  <label class="option"><input type="radio" name="q21" value="False">False</label>
+</section>
+
+<!-- Q22 -->
+<section class="card" data-type="question">
+  <p class="q-title">22. Als je eerder een cursus hebt gedaan, tot welk niveau?</p>
+  <label class="option"><input type="radio" name="q22" value="A1" required>A1</label>
+  <label class="option"><input type="radio" name="q22" value="A2">A2</label>
+  <label class="option"><input type="radio" name="q22" value="B1">B1</label>
+  <label class="option"><input type="radio" name="q22" value="B2">B2</label>
+</section>
+
+<!-- Q23 -->
+<section class="card" data-type="question">
+  <p class="q-title">23. Wanneer was de laatste keer dat je een Nederlandse cursus hebt gedaan?</p>
+  <label class="option"><input type="radio" name="q23" value="&lt; 6 maanden geleden" required>&lt; 6 maanden geleden</label>
+  <label class="option"><input type="radio" name="q23" value="6 maanden - 1 jaar geleden">6 maanden - 1 jaar geleden</label>
+  <label class="option"><input type="radio" name="q23" value="Meer dan 1 jaar geleden">Meer dan 1 jaar geleden</label>
+  <label class="option"><input type="radio" name="q23" value="Ik heb nog nooit een Nederlandse cursus gedaan">Ik heb nog nooit een Nederlandse cursus gedaan</label>
+</section>
+
+
         <!-- Final Info Card -->
         <section class="card" data-type="info">
           <p class="q-title">Almost done! Your details:</p>
