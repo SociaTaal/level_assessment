@@ -1,3 +1,11 @@
+<!--
+  Sociataal Quick Quiz – Card-based with bicycle icon
+  • White background with 4px solid border #64906d
+  • Smooth slide transitions, progress bar with a moving bicycle icon
+  • Button font Nunito Sans, extra vertical padding
+  • Progress bar pinned at bottom
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,20 +14,21 @@
   <title>Sociataal Quick Quiz</title>
 
   <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
 
   <style>
     :root {
       --bg-page: #F2F6F3;
-      --bg-card: #E6F3E9;
+      --bg-card: #ffffff; /* white background */
       --text-dark: #1D1F22;
       --text-body: #2B2D31;
       --border: #C8D6CF;
-      --brand: #F9A826; /* orange */
+      --brand: #F9A826;
       --success: #27AE60;
       --danger: #B00020;
       --radius: 12px;
       --slide-ms: 320ms;
+      --bike-size: 24px;
     }
     * { box-sizing: border-box; }
     body {
@@ -31,102 +40,154 @@
       padding: 24px;
     }
     .quiz {
+      position: relative;
       background: var(--bg-card);
-      width: 100%;
-      max-width: 680px;
+      border: 4px solid #64906d; /* added border */
+      width: 100%; max-width: 680px;
       border-radius: var(--radius);
       box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      display: flex; flex-direction: column;
       overflow: hidden;
     }
-    .quiz-header { padding: 20px 24px 0; }
-    h1 { font-family: 'Poppins', sans-serif; color: var(--text-dark); font-size: 2rem; margin: 0 0 8px; text-align: center; }
+    .quiz-header { padding: 16px 24px 0; }
+    h1 {
+      font-family: 'Poppins', sans-serif;
+      color: var(--text-dark);
+      font-size: 2rem; margin: 0 0 6px;
+      text-align: center;
+    }
 
-    /* Card viewport */
-    .cards { position: relative; height: auto; min-height: 360px; overflow: hidden; }
-    .card { position: absolute; inset: 0; padding: 24px; background: transparent; transform: translateX(100%); opacity: 0; transition: transform var(--slide-ms) ease, opacity var(--slide-ms) ease; }
+    .cards {
+      position: relative; flex: 1;
+      min-height: 260px; overflow: hidden;
+    }
+    .card {
+      position: absolute; inset: 0;
+      padding: 20px 24px;
+      transform: translateX(100%);
+      opacity: 0;
+      transition: transform var(--slide-ms) ease, opacity var(--slide-ms) ease;
+    }
     .card.active { transform: translateX(0); opacity: 1; }
     .card.to-left { transform: translateX(-100%); }
 
-    .q-title { font-family: 'Poppins', sans-serif; font-weight: 600; color: var(--text-body); margin: 0 0 10px; }
-    .option { display: block; margin: 10px 0; color: var(--text-body); cursor: pointer; }
+    .q-title {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      color: var(--text-body);
+      margin: 0 0 6px;
+    }
+    .option { display: block; margin: 8px 0; color: var(--text-body); cursor: pointer; }
     .option input { margin-right: 8px; }
 
-    .field { margin: 14px 0; }
-    .field label { font-weight: 600; display: block; }
-    .text-input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; margin-top: 6px; font-size: 16px; font-family: inherit; background: #fff; }
+    .field { margin: 12px 0; }
+    .field label { font-weight: 600; display: block; margin-bottom: 6px; }
+    .text-input {
+      width: 100%; padding: 10px;
+      border: 1px solid var(--border); border-radius: 8px;
+      font-size: 16px; font-family: inherit; background: #fff;
+    }
 
-    /* Footer controls */
-    .controls { display: flex; gap: 10px; padding: 16px 24px 20px; }
-    .btn { flex: 1; border: 0; border-radius: 10px; background: var(--brand); color: var(--text-dark); font-weight: 700; font-family: 'Poppins', sans-serif; padding: 12px 16px; cursor: pointer; }
-    .btn[disabled] { opacity: .6; cursor: not-allowed; }
+    .controls { display: flex; gap: 10px; padding: 16px 16px 40px; }
+    .btn {
+      flex: 1; border: none; border-radius: 8px;
+      background: var(--brand); color: var(--text-dark);
+      font-family: 'Nunito Sans', sans-serif; font-weight: 700;
+      line-height: 1.2; padding: 12px 16px; cursor: pointer;
+      font-size: 1rem;
+    }
+    .btn[disabled] { opacity: 0.6; cursor: not-allowed; }
     .btn.secondary { background: #fff3da; }
 
-    /* Progress bar */
-    .progress-wrap { width: 100%; height: 8px; background: #ffe3b3; border-radius: 999px; overflow: hidden; margin: 0; }
-    .progress-bar { height: 100%; width: 0%; background: var(--brand); transition: width 250ms ease; }
+    .progress-wrap {
+      position: absolute; left: 0; right: 0; bottom: 0;
+      height: 6px; background: #ffe3b3; margin: 0;
+      overflow: visible; /* allow bike to sit above the bar */
+      z-index: 1; /* bar underneath the bike */
+    }
+    .progress-bar {
+      height: 100%; width: 0%; background: var(--brand);
+      transition: width 250ms ease;
+    }
+    .bike {
+      position: absolute;
+      bottom: calc(100% + 4px); /* place bike just above the bar */
+      left: 0%;
+      width: var(--bike-size);
+      height: var(--bike-size);
+      background-size: contain;       /* use external PNG */
+      background-repeat: no-repeat;
+      background-position: center;
+      transition: left 250ms ease;
+      transform: translateX(-50%);
+      z-index: 2;                      /* above the bar */
+    }
+    .home {
+      position: absolute;
+      bottom: calc(100% + 4px);
+      left: 99%;
+      width: 28px;
+      height: 28px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      transform: translateX(-50%);
+      z-index: 2;
+    }
 
-    .message { padding: 0 24px 20px; text-align: center; font-weight: 600; }
+    .message { padding: 0 24px 12px; text-align: center; font-weight: 600; }
   </style>
 </head>
 <body>
   <div class="quiz">
     <div class="quiz-header">
-      <h1>Quick Quiz</h1>
+      <h1>Test Your Dutch Level</h1>
     </div>
 
-    <form id="quizForm">
-      <!-- Card viewport -->
+    <form id="quizForm" style="flex:1;display:flex;flex-direction:column;">
       <div class="cards" id="cards">
         <!-- Q1 -->
         <section class="card active" data-type="question">
           <p class="q-title">1. What is the capital of the Netherlands?</p>
-          <label class="option"><input type="radio" name="q1" value="Amsterdam" required> Amsterdam</label>
-          <label class="option"><input type="radio" name="q1" value="Rotterdam"> Rotterdam</label>
-          <label class="option"><input type="radio" name="q1" value="The Hague"> The Hague</label>
-          <label class="option"><input type="radio" name="q1" value="Utrecht"> Utrecht</label>
+          <label class="option"><input type="radio" name="q1" value="Amsterdam" required>Amsterdam</label>
+          <label class="option"><input type="radio" name="q1" value="Rotterdam">Rotterdam</label>
+          <label class="option"><input type="radio" name="q1" value="The Hague">The Hague</label>
+          <label class="option"><input type="radio" name="q1" value="Utrecht">Utrecht</label>
         </section>
         <!-- Q2 -->
         <section class="card" data-type="question">
           <p class="q-title">2. Which color is in the Dutch flag?</p>
-          <label class="option"><input type="radio" name="q2" value="Red" required> Red</label>
-          <label class="option"><input type="radio" name="q2" value="Green"> Green</label>
-          <label class="option"><input type="radio" name="q2" value="Black"> Black</label>
-          <label class="option"><input type="radio" name="q2" value="Yellow"> Yellow</label>
+          <label class="option"><input type="radio" name="q2" value="Red" required>Red</label>
+          <label class="option"><input type="radio" name="q2" value="Green">Green</label>
+          <label class="option"><input type="radio" name="q2" value="Black">Black</label>
+          <label class="option"><input type="radio" name="q2" value="Yellow">Yellow</label>
         </section>
         <!-- Q3 -->
         <section class="card" data-type="question">
           <p class="q-title">3. “Gezellig” roughly means:</p>
-          <label class="option"><input type="radio" name="q3" value="Cozy" required> Cozy</label>
-          <label class="option"><input type="radio" name="q3" value="Sad"> Sad</label>
-          <label class="option"><input type="radio" name="q3" value="Fast"> Fast</label>
-          <label class="option"><input type="radio" name="q3" value="Bitter"> Bitter</label>
+          <label class="option"><input type="radio" name="q3" value="Cozy" required>Cozy</label>
+          <label class="option"><input type="radio" name="q3" value="Sad">Sad</label>
+          <label class="option"><input type="radio" name="q3" value="Fast">Fast</label>
+          <label class="option"><input type="radio" name="q3" value="Bitter">Bitter</label>
         </section>
         <!-- Q4 -->
         <section class="card" data-type="question">
           <p class="q-title">4. Which flower is iconic in the Netherlands?</p>
-          <label class="option"><input type="radio" name="q4" value="Tulip" required> Tulip</label>
-          <label class="option"><input type="radio" name="q4" value="Rose"> Rose</label>
-          <label class="option"><input type="radio" name="q4" value="Lily"> Lily</label>
-          <label class="option"><input type="radio" name="q4" value="Sunflower"> Sunflower</label>
+          <label class="option"><input type="radio" name="q4" value="Tulip" required>Tulip</label>
+          <label class="option"><input type="radio" name="q4" value="Rose">Rose</label>
+          <label class="option"><input type="radio" name="q4" value="Lily">Lily</label>
+          <label class="option"><input type="radio" name="q4" value="Sunflower">Sunflower</label>
         </section>
-        <!-- Q5 template (duplicate and edit up to Q20) -->
+        <!-- Q5 Template -->
         <section class="card" data-type="question">
           <p class="q-title">5. [Your question 5 here]</p>
-          <label class="option"><input type="radio" name="q5" value="Option 1" required> Option 1</label>
-          <label class="option"><input type="radio" name="q5" value="Option 2"> Option 2</label>
-          <label class="option"><input type="radio" name="q5" value="Option 3"> Option 3</label>
-          <label class="option"><input type="radio" name="q5" value="Option 4"> Option 4</label>
+          <label class="option"><input type="radio" name="q5" value="Option 1" required>Option 1</label>
+          <label class="option"><input type="radio" name="q5" value="Option 2">Option 2</label>
+          <label class="option"><input type="radio" name="q5" value="Option 3">Option 3</label>
+          <label class="option"><input type="radio" name="q5" value="Option 4">Option 4</label>
         </section>
-        <section class="card" data-type="question">
-          <p class="q-title">5. [Your question 6 here]</p>
-          <label class="option"><input type="radio" name="q6" value="Option 1" required> Option 1</label>
-          <label class="option"><input type="radio" name="q6" value="Option 2"> Option 2</label>
-          <label class="option"><input type="radio" name="q6" value="Option 3"> Option 3</label>
-          <label class="option"><input type="radio" name="q6" value="Option 4"> Option 4</label>
-        </section>
-        <!-- Duplicate the section above for q6 … q20, then keep the final card below -->
-
-        <!-- Final card: Name & Email -->
+        <!-- Duplicate the above section for Q6–Q20 -->
+        <!-- Final Info Card -->
         <section class="card" data-type="info">
           <p class="q-title">Almost done! Your details:</p>
           <div class="field">
@@ -140,16 +201,16 @@
         </section>
       </div>
 
-      <!-- Footer controls -->
       <div class="controls">
         <button type="button" class="btn secondary" id="backBtn">Back</button>
         <button type="button" class="btn" id="nextBtn">Next</button>
         <button type="submit" class="btn" id="submitBtn" style="display:none">Submit</button>
       </div>
 
-      <!-- Progress -->
       <div class="progress-wrap">
         <div class="progress-bar" id="progressBar"></div>
+        <div class="bike" id="bike"></div>
+        <div class="home" id="home"></div>
       </div>
 
       <div id="message" class="message"></div>
@@ -157,102 +218,83 @@
   </div>
 
   <script>
-    // REQUIRED: set your deployed Apps Script URL (must end with /exec)
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzli3oCJzO3t5OrQVpoce_8UkPm_5gvDsWoclc53SAe_Bxk4fikFlYfM0YgcsVDaBSdiQ/exec';
-
+    const SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec';
     const cards = Array.from(document.querySelectorAll('.card'));
     const questionCards = cards.filter(c => c.dataset.type === 'question');
     const backBtn = document.getElementById('backBtn');
     const nextBtn = document.getElementById('nextBtn');
     const submitBtn = document.getElementById('submitBtn');
     const progressBar = document.getElementById('progressBar');
+    const bike = document.getElementById('bike');
+    const home = document.getElementById('home');
     const msg = document.getElementById('message');
     const form = document.getElementById('quizForm');
+    let index = 0;
 
-    let index = 0; // active card index
+    // PNG URL for the bike icon (replace with your own)
+    const BIKE_URL = 'https://lwfiles.mycourse.app/6465f6bc5622523f06af5d43-public/324057b22a1d529e643a7395e7257e57.png';
+    bike.style.backgroundImage = `url('${BIKE_URL}')`;
+
+    // PNG URL for the destination image at the end (house)
+    const HOME_URL = 'https://lwfiles.mycourse.app/6465f6bc5622523f06af5d43-public/ab55b2f90e5571cdd5e6f5dde820befc.png';
+    home.style.backgroundImage = `url('${HOME_URL}')`;
 
     function updateProgress() {
-      // Progress based only on question cards
-      const answeredIdx = Math.min(index, questionCards.length); // don't exceed
-      const pct = Math.round((answeredIdx / questionCards.length) * 100);
+      const pct = Math.round((index / questionCards.length) * 100);
       progressBar.style.width = pct + '%';
+      bike.style.left = pct + '%';
     }
 
-    function showCard(newIndex, direction = 1) {
+    function showCard(newIndex, dir) {
       if (newIndex < 0 || newIndex >= cards.length) return;
-      const current = cards[index];
-      const next = cards[newIndex];
-
-      // prepare directions
+      const current = cards[index], next = cards[newIndex];
       current.classList.remove('active');
-      if (direction > 0) current.classList.add('to-left'); else current.style.transform = 'translateX(100%)';
-
-      // reset all positions
-      cards.forEach(c => { if (c !== next) { if (!c.classList.contains('to-left')) c.style.transform = 'translateX(100%)'; c.style.opacity = 0; } });
-
-      // activate next
+      current.classList.add('to-left');
       next.classList.remove('to-left');
       next.classList.add('active');
-      next.style.transform = 'translateX(0)';
-      next.style.opacity = 1;
-
       index = newIndex;
-      updateControls();
-      updateProgress();
+      updateControls(); updateProgress();
     }
 
     function updateControls() {
-      backBtn.style.display = index === 0 ? 'none' : 'inline-block';
-      // If on last card, show Submit; else show Next
-      const onLast = index === cards.length - 1;
-      nextBtn.style.display = onLast ? 'none' : 'inline-block';
-      submitBtn.style.display = onLast ? 'inline-block' : 'none';
+      backBtn.style.display = index === 0 ? 'none' : 'block';
+      const last = index === cards.length - 1;
+      nextBtn.style.display = last ? 'none' : 'block';
+      submitBtn.style.display = last ? 'block' : 'none';
     }
 
     function validateCurrent() {
-      const current = cards[index];
-      if (current.dataset.type !== 'question') return true; // only enforce on question cards
-      const inputs = current.querySelectorAll('input[type="radio"][name^="q"]');
-      // at least one checked
-      return Array.from(inputs).some(i => i.checked);
+      const c = cards[index];
+      if (c.dataset.type !== 'question') return true;
+      return Array.from(c.querySelectorAll('input[type="radio"]')).some(i => i.checked);
     }
 
-    backBtn.addEventListener('click', () => {
-      showCard(index - 1, -1);
-    });
-
+    backBtn.addEventListener('click', () => showCard(index-1, -1));
     nextBtn.addEventListener('click', () => {
       msg.textContent = '';
-      if (!validateCurrent()) {
-        msg.style.color = 'var(--danger)';
-        msg.textContent = 'Please select an answer to continue.';
-        return;
-      }
-      showCard(index + 1, 1);
+      if (!validateCurrent()) { msg.style.color = 'var(--danger)'; msg.textContent = 'Select an answer.'; return; }
+      showCard(index+1, 1);
     });
 
-    // Initial UI
-    updateControls();
-    updateProgress();
+    updateControls(); updateProgress();
 
-    // Submit handler (no-cors to avoid browser CORS on static hosting)
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      submitBtn.disabled = true; nextBtn.disabled = true; backBtn.disabled = true;
-      msg.textContent = '';
+    form.addEventListener('submit', async e => {
+      e.preventDefault(); submitBtn.disabled = nextBtn.disabled = backBtn.disabled = true; msg.textContent = '';
       try {
         await fetch(SCRIPT_URL, { method: 'POST', body: new FormData(form), mode: 'no-cors' });
-        msg.style.color = 'var(--success)';
-        msg.textContent = 'Thanks! Your responses have been recorded.';
+        msg.style.color = 'var(--success)'; msg.textContent = 'Thanks! Your responses have been recorded.';
         form.reset();
       } catch (err) {
-        msg.style.color = 'var(--danger)';
-        msg.textContent = 'Oops! Something went wrong.';
+        msg.style.color = 'var(--danger)'; msg.textContent = 'Oops! Something went wrong.';
         console.error(err);
       } finally {
-        submitBtn.disabled = false; nextBtn.disabled = false; backBtn.disabled = false;
+        submitBtn.disabled = nextBtn.disabled = backBtn.disabled = false;
       }
     });
   </script>
 </body>
 </html>
+
+<!--
+Reminder: Duplicate the Q5 template section for Q6–Q20 with updated question text and name attributes.
+-->
